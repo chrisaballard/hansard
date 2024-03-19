@@ -6,17 +6,23 @@ from glob import glob
 from dataclasses import asdict
 import json
 
+from tqdm import tqdm
+
 from hansard_parser.xml_parser import parse_hansard_xml_file
 
 
 def main(xml_file_path, output_path):
-    for xml_file in glob(f"{xml_file_path}\\*.xml"):
+    for xml_file in tqdm(
+        glob(f"{xml_file_path}\\*.xml")
+    ):
+        print(xml_file)
         parsed_hansard_file = parse_hansard_xml_file(xml_file)
         xml_file = Path(xml_file)
         json_output_file = Path(output_path) / xml_file.with_suffix(".json").name
-        with open(json_output_file, "wt") as json_f:
-            headings = [asdict(heading) for heading in parsed_hansard_file.values()]
-            json.dump(headings, json_f, indent=4)
+        headings = [asdict(heading) for heading in parsed_hansard_file.values()]
+        if headings:
+            with open(json_output_file, "wt") as json_f:
+                    json.dump(headings, json_f, indent=4)
 
 
 if __name__ == "__main__":
