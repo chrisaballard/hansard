@@ -8,15 +8,28 @@ import json
 
 from tqdm import tqdm
 
-from hansard_parser.xml_parser import parse_hansard_xml_file
+from hansard_parser.xml_parser import HansardFileParser
 
+
+ENTITY_LABELS = [
+     "person",
+     "date",
+     "committee",
+     "organisation",
+     "country",
+     "location",
+     "law",
+     #"policy"
+]
 
 def main(xml_file_path, output_path):
+    parser = HansardFileParser(ENTITY_LABELS)
+
     for xml_file in tqdm(
         glob(f"{xml_file_path}\\*.xml")
     ):
         print(xml_file)
-        parsed_hansard_file = parse_hansard_xml_file(xml_file)
+        parsed_hansard_file = parser.parse_xml_file(xml_file)
         xml_file = Path(xml_file)
         json_output_file = Path(output_path) / xml_file.with_suffix(".json").name
         headings = [asdict(heading) for heading in parsed_hansard_file.values()]

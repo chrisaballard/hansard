@@ -1,6 +1,5 @@
 from dataclasses import dataclass, field
-from collections import defaultdict
-from typing import List, Optional
+from typing import List, Optional, Union
 from enum import Enum
 
 class TagType(Enum):
@@ -28,6 +27,11 @@ class EntityAttributes:
     start: int
     end: int
 
+@dataclass
+class ParagraphEntity:
+    text: str
+    label: str
+    attributes: Optional[EntityAttributes] = field(default_factory=list)
 
 @dataclass
 class Person:
@@ -62,7 +66,7 @@ class Heading:
 @dataclass
 class Paragraph:
     text: str
-    person_entities: List[Person]
+    entities: List[Union[Person, ParagraphEntity]]
 
 
 @dataclass
