@@ -88,15 +88,13 @@ def parse_hansard_xml_file(file_path: str) -> HEADING_SPEECHES:
     hierarchy = {}
     current_major_heading = None
     current_minor_heading = None
-    current_division = None
     
     for child in root:
         if child.tag == TagType.MAJOR_HEADING.value:
             # Parse major headings
+            current_minor_heading = None
             current_major_heading = Heading(id=child.attrib["id"], name=child.text.strip())
             hierarchy[current_major_heading.name] = current_major_heading
-            current_major_heading.headings = []
-            current_major_heading.speeches = []
         elif child.tag == TagType.MINOR_HEADING.value:
             # Parse minor headings
             if current_major_heading:
